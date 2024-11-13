@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Notes App</title>
+  <!-- BOOTSTRAP - BOOTSWATCH THEME - COSMOS -->
+  <link rel="stylesheet" href="https://bootswatch.com/5/superhero/bootstrap.min.css">
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <!-- CUSTOM CSS -->
+  <script src="/Js/signup.js"></script>
+  <link rel="stylesheet" href="/css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Inline&family=Nosifer&family=Tilt+Prism&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-pzH6bRl8L1fvq00NExK6m1bBx5Nl1XpsmEs3QkNVpnuFScF7E1Goz9Q+dY0ZQ1HTqf+InbIiAMqRnJgFQzFgRA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body>
+
+  {{> navigation }}
+
+
+  <main class="container p-6">
+    <div class="col-md-4 offset-md-4">
+      {{> messages }}
+      {{> errors }}
+    </div>
+
+    <!-- Breadcrumbs -->
+    {{#if breadcrumbs}}
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {{#each breadcrumbs}}
+        {{#if this.name}}
+        {{#if @last}}
+        <li class="breadcrumb-item active" aria-current="page">{{this.name}}</li>
+        {{else}}
+        <li class="breadcrumb-item"><a href="{{this.url}}">{{this.name}}</a></li>
+        {{/if}}
+        {{/if}}
+        {{/each}}
+      </ol>
+    </nav>
+    {{/if}}
+
+    {{{ body }}}
+  </main>
+
+  {{>footer}}
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <!-- SweetAlert -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+  <script>
+    window.setTimeout(function () {
+      $(".alert").fadeTo(200, 0).slideUp(200, function () {
+        $(this).remove();
+      });
+    }, 2000);
+  </script>
+
+{{#if user}}
+<script>
+  const SESSION_TIMEOUT = 120000; // Duración de la sesión en milisegundos (en este caso, 2 minutos)
+  let timeout; // Variable para almacenar el identificador del temporizador
+
+  // Función para reiniciar el temporizador de sesión
+  function resetTimeout() {
+    clearTimeout(timeout); // Limpia el temporizador existente si existe
+    timeout = setTimeout(logout, SESSION_TIMEOUT); // Establece un nuevo temporizador de sesión con la función logout después de SESSION_TIMEOUT milisegundos
+  }
+
+  // Función para cerrar la sesión del usuario
+  function logout() {
+    // Muestra un diálogo de alerta utilizando la librería SweetAlert (swal)
+    swal({
+      title: "Termino de la sesion",
+      text: "Tu sesión se cerrará por inactividad.",
+      icon: "warning",
+      buttons: {
+        stay: {
+          text: "Permanecer en el sitio",
+          className: "btn-success",
+          value: "stay",
+        },
+        logout: {
+          text: "Cerrar sesión",
+          className: "btn-danger", 
+          value: "logout",
+        },
+      },
+      closeOnClickOutside: false, // Evita que el diálogo se cierre haciendo clic afuera
+      closeOnEsc: false, // Evita que el diálogo se cierre al presionar la tecla Esc
+      timer: 5000, // Duración del temporizador del diálogo (en este caso, 50 segundos)
+      buttonsStyling: false, // Desactiva el estilo predeterminado de los botones
+    }).then((value) => { // La función then se ejecuta cuando se hace clic en uno de los botones del diálogo
+      if (value === "logout") { // Si se hace clic en "Cerrar sesión"
+        window.location.href = "/auth/logout"; // Redirige a la página de cierre de sesión
+      } else { // Si se hace clic en "Permanecer en el sitio"
+        resetTimeout(); // Reinicia el temporizador de sesión
+      }
+    });
+
+    setTimeout(() => {
+      window.location.href = "/auth/logout"; // Redirige a la página de cierre de sesión después de 10 segundos (por si el usuario no realiza ninguna acción)
+    }, 10000);
+  }
+
+  // Evento que se dispara cuando hay movimiento del ratón o se presiona una tecla
+  $(document).on("mousemove keydown", function () {
+    resetTimeout(); // Reinicia el temporizador de sesión cuando se detecta actividad
+  });
+
+  resetTimeout(); // Inicia el temporizador de sesión cuando se carga la página
+</script>
+{{/if}}
+
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+  <!-- Scritps -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

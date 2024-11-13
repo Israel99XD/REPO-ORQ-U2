@@ -1,0 +1,65 @@
+<title>Mapa del Sitio</title>
+<link rel="stylesheet" href="https://bootswatch.com/5/superhero/bootstrap.min.css">
+<style>
+    .site-map {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .site-map h1 {
+        margin-bottom: 20px;
+    }
+
+    .sub-menu {
+        padding-left: 20px;
+    }
+</style>
+<div class="background"></div>
+<div class="container">
+    <div class="card card-body site-map">
+        <h1 class="mt-4">Mapa del Sitio</h1>
+
+        <ul class="list-group">Principal
+            <li class="list-group-item"><a href="/" class="btn btn-primary btn-block">Inicio</a></li>
+            <li class="list-group-item"><a href="/about" class="btn btn-primary btn-block">Sobre nosotros</a></li>
+            <li class="list-group-item">Servicios
+                <ul class="list-group sub-menu">
+
+                    <li class="list-group-item"><a href="/servicios/marketing-digital"
+                            class="btn btn-primary btn-block">Marketing Digital</a></li>
+                    <li class="list-group-item"><a href="/servicios/disenio-ui-ux"
+                            class="btn btn-primary btn-block">Diseño UI/UX</a></li>
+                    <li class="list-group-item"><a href="/servicios/disenio-de-aplicaciones"
+                            class="btn btn-primary btn-block">Diseño de Aplicaciones</a></li>
+                    <li class="list-group-item"><a href="/servicios/pensamiento-digital"
+                            class="btn btn-primary btn-block">Pensamiento Digital</a></li>
+                    <li class="list-group-item"><a href="/servicios/Transformacion-Digital"
+                            class="btn btn-primary btn-block">Transformación Digital</a></li>
+                    <li class="list-group-item"><a href="/servicios/Desarrollo-Web"
+                            class="btn btn-primary btn-block">Desarrollo Web</a></li>
+                </ul>
+            </li>
+            <li class="list-group-item">Cuenta
+                <ul class="list-group sub-menu">
+                    <li class="list-group-item"><a href="/auth/signup" class="btn btn-primary btn-block">Registrarse</a>
+                    </li>
+                    <li class="list-group-item"><a href="/auth/signin" class="btn btn-primary btn-block">Iniciar
+                            sesión</a></li>
+                    <li class="list-group-item">Usario logeado
+                        <ul class="list-group sub-menu">
+                            <li class="list-group-item"><a href="/notes" class="btn btn-primary btn-block">Todas las
+                                    ordenes</a></li>
+                            <li class="list-group-item"><a href="/notes/add" class="btn btn-primary btn-block">Nueva
+                                    orden</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

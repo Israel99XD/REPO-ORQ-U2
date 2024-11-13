@@ -1,0 +1,136 @@
+<div class="background"></div>
+<button type="button" class="btn btn-primary float-end btn-sm mb-1" data-bs-toggle="modal"
+  data-bs-target="#staticBackdrop">
+  NUEVA PIEZA
+</button>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">NUEVA PIEZA</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/piezas/new-pieza" method="post" class="mb-2 form-control">
+          <input class="form-control" type="text" name="nombre" placeholder="Nombre de la pieza" required>
+          <input class="form-control mt-1" type="number" name="cantidad" placeholder="Cantidad" required>
+          <input class="form-control mt-1" type="number" name="precio" placeholder="Precio" required>
+          <input class="form-control mt-1" type="text" name="marca" placeholder="Marca">
+          <input class="form-control mt-1" type="text" name="descripcion" placeholder="Descripción">
+          <div class="mt-2 mb-2">
+            <button type="button" class="btn btn-primary " data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success  float-end">Insertar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<table class="table table-dark table-striped" id="tabla">
+  <thead class="bg-light">
+    <tr>
+      <th>Nombre </th>
+      <th>Cantidad</th>
+      <th>Precio</th>
+      <th>Marca</th>
+      <th>Descripción</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each piezas}}
+    <tr>
+      <td>{{nombre}}</td>
+      <td>{{cantidad}}</td>
+      <td> ${{precio}}</td>
+      <td>{{marca}}</td>
+      <td>{{descripcion}}</td>
+      <td>
+        <form action="/piezas/delete/{{_id}}?_method=DELETE" method="post" style="display:inline;">
+          <button class="btn btn-danger btn-sm mb-1" type="submit"><i class="fas fa-trash"></i> Eliminar uno</button>
+        </form>
+        <form action="/piezas/eliminar/{{_id}}?_method=DELETE" method="post" style="display:inline;">
+          <button class="btn btn-primary btn-sm mb-1" type="submit"><i class="fas fa-trash"></i> Eliminar
+            Objeto</button>
+        </form>
+        <button type="button" class="btn btn-warning mb-1 btn-sm recuperar-nombre" data-nombre="{{nombre}}"
+          data-bs-toggle="modal" data-bs-target="#staticBackdro">
+          <i class="fas fa-pencil-alt"></i> Más Stock
+        </button>
+
+        <div class="modal fade" id="staticBackdro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdroLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title fs-5" id="staticBackdroLabel">NUEVA PIEZA</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/piezas/new-pieza" method="post" class="mb-2 form-control">
+                  <input class="form-control" type="text" name="nombre" placeholder="Nombre de la pieza" readonly
+                    required>
+                  <input class="form-control mt-1" type="number" name="cantidad" placeholder="Cantidad" required>
+                  <div class="mt-2 mb-2">
+                    <button type="button" class="btn btn-primary " data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success  float-end">Insertar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('#tabla').DataTable({
+      searching: true,
+      language: {
+        "decimal": "",
+        "emptyTable": "No hay datos disponibles en la tabla",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+        "infoEmpty": "Mostrando 0 a 0 de 0 entradas",
+        "infoFiltered": "(filtrado de _MAX_ entradas totales)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron registros coincidentes",
+        "paginate": {
+          "first": "Primero",
+          "last": "Último",
+          "next": "Siguiente",
+          "previous": "Anterior"
+        },
+        "aria": {
+          "sortAscending": ": Activar para ordenar la columna en orden ascendente",
+          "sortDescending": ": Activar para ordenar la columna en orden descendente"
+        }
+      }
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('.recuperar-nombre').on('click', function () {
+      var nombre = $(this).data('nombre');
+      $('input[name="nombre"]').val(nombre);
+    });
+  });
+</script>

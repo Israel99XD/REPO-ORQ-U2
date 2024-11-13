@@ -1,0 +1,20 @@
+<div class="background"></div>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card mt-2 text-white rounded">
+            <div class="card-header pt-3">
+                <h1 class="h4 text-white text-center">DETALLES DEL PAGO</h1>
+                <hr class="my-2" />
+                <p><strong>Número de Servicio:</strong> {{detallesPago.nServicio}}</p> <!-- Agregar esta línea -->
+                <hr class="my-2" />
+                <h2 class="text-center">Detalles de la Transacción PayPal</h2>
+                <p><strong>Orden ID:</strong> {{orderId}}</p>
+                <p><strong>ID de Transacción PayPal:</strong> {{detallesPago.paymentId}}</p>
+                <p><strong>ID del Pagador:</strong> {{detallesPago.payerId}}</p>
+                <p><strong>Estado del Pago:</strong> {{detallesPago.paymentStatus}}</p>
+                <p><strong>Monto Pagado: $</strong> {{detallesPago.amount}} MXN</p>
+                <p><strong>Fecha de pago:</strong> {{detallesPago.paymentDate}}</p>
+            </div>
+        </div>
+    </div>
+</div>

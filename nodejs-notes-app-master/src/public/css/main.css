@@ -1,0 +1,296 @@
+body {
+  background-image: url('/img/fondo2.jpg');
+  background-size: cover;
+  padding-top: 80px;
+  /* Ajusta este valor según la altura de tu barra de navegación */
+
+}
+
+.background {
+  background-image: url("/img/fondo2.jpg");
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  z-index: -1;
+  /* Coloca el fondo detrás del contenido */
+}
+
+.card{
+  border-radius: 20px;
+  margin-bottom: 100px;
+}
+
+
+
+.carousel-item img {
+  width: 2000px; /* Ajusta el tamaño de las imágenes al ancho del contenedor */
+  height: 4000px; /* Permite que la altura se ajuste automáticamente según el ancho */
+  max-height: 3000px; /* Establece una altura máxima para las imágenes */
+}
+
+footer p {
+  padding: 0;
+  font-size: 0.8em;
+  color: hsla(0, 0%, 100%, 0.767);
+  margin: 1em 0;
+  font-size: 1rem;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  margin: 1em 0;
+}
+
+footer ul li a {
+  padding: 1em;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.904);
+  transition: 100ms;
+}
+
+footer ul li a:hover {
+  color: var(--primary);
+}
+
+footer {
+  width: 100%;
+  background: #13222e;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+}
+
+.logo {
+  width: 30%;
+}
+
+.logonav {
+  width: 30px;
+  border-radius: 50%;
+}
+
+.nav-item.active a {
+  color: red;
+  /* Puedes cambiar el color a tu preferencia */
+  font-weight: bold;
+  /* Otras propiedades de estilo que desees aplicar */
+}
+
+
+:root {
+  --its-body-color: #f8fafd;
+  --its-primary: #0071dc;
+  --its-primaryLight: #0071dcab;
+  --its-bg-darkColor: #070b3b;
+  --its-white-color: #ffffff;
+  --its-bgColor-gray: #f9fafb;
+  --its-title-color: #241F1B;
+  --its-text-color: #5f6c91;
+  --its-border-color: #e9ebfa;
+  --its-bg-dark: #17263a;
+  --gradient-color1: #ff5873;
+  --gradient-color2: #ffad5d;
+  --gradient-common: linear-gradient(0deg, var(--gradient-color1) 0%, var(--gradient-color2) 100%);
+  --all-transition: all 0.3s;
+  --transition: all 0.3s ease-in-out;
+
+  --its-purple: #944be4;
+  --its-purple-light: 148, 75, 228;
+
+  --its-blue: #797ff2;
+  --its-blue-light: 121, 127, 242;
+
+  --its-success: #4ce6a1;
+  --its-success-light: 13, 205, 148;
+
+  --its-pink: #fe6a94;
+  --its-pink-light: 239, 78, 184;
+
+  --its-pink: #ef4eb8;
+  --its-light-pink: 239, 78, 184;
+
+}
+
+/* ==== its css comman start === */
+.its_container {
+  max-width: 1300px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.its_container_full {
+  max-width: 1300px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.its_section {
+  background-color: var(--its-white-color);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 50px 0;
+}
+
+
+
+/* ==== its header start === */
+/* Ajustes de estilo para el contenedor principal */
+.its_section2_wr {
+  background-color: var(--its-bg-darkColor); /* Cambia el color de fondo según tu preferencia */
+  padding: 50px 0;
+}
+
+/* Ajustes de estilo para los títulos y párrafos */
+.its_section2_wr .its_heading,
+.its_section2_wr .its_paragraph {
+  color: var(--its-white-color);
+}
+
+/* Utilizamos flexbox para alinear correctamente los elementos */
+.its_section2_flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Establecemos una altura mínima para los elementos .its_section2_item */
+.its_section2_item {
+  min-height: 300px; /* Ajusta la altura mínima según sea necesario */
+  flex: 1 1 300px; /* Permitimos que los elementos crezcan y se encojan según el espacio disponible */
+  margin-right: 15px; /* Ajusta el margen entre los elementos */
+}
+
+/* Ajustamos los estilos para el texto */
+.its_section2_item h3,
+.its_section2_item p {
+  margin-bottom: 10px; /* Ajusta el margen inferior según sea necesario */
+}
+
+.its_section2_item a {
+  color: var(--its-primary);
+}
+
+/* Ajustamos los estilos para la imagen */
+.its_section2_item img {
+  width: 100%;
+  height: 200px;
+  display: block; /* Evita que la imagen se vea afectada por el tamaño del texto */
+  border-radius: 6px; /* Añade esquinas redondeadas a la imagen */
+}
+
+/* Ajustes de estilo para los botones */
+.its_section2_item button {
+  margin-top: 20px; /* Ajusta el margen superior según tu preferencia */
+}
+
+.swal-center-btn {
+  margin: 0 auto; /* Centra horizontalmente los botones */
+  display: block; /* Asegura que los botones se muestren en bloques, ocupando todo el ancho disponible */
+}
+
+/* Responsive Css Start */
+@media screen and (min-width: 992px) {
+  .its_toggle {
+    display: none;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 1150px) {
+  .its_banner_content h2 {
+    font-size: 42px;
+    line-height: 45px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .its_banner_content h2 {
+    font-size: 42px;
+    line-height: 45px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .its_section6_wr .its_section6_flex {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+
+}
+
+@media screen and (max-width: 884px) {
+  .its_section2_wr .its_section2_flex {
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 667px) {
+  .its_section2_wr .its_section2_flex {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 882px) {
+  .its_section2_wr .its_section2_flex {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .carousel-item img {
+    width: 100%;
+  height: 200px;
+  display: block;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .its_section2_wr .its_section2_flex {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .carousel-item img {
+    width: 100%;
+    height: 200px;
+    display: block;
+  }
+  .dds{
+    font-size:90%;
+  }
+}

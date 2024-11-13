@@ -1,0 +1,232 @@
+<div class="background"></div>
+<div class="row">
+  {{#if (eq user.rol 'admin')}}
+  {{#if notes.length}}
+  {{#each notes}}
+  <div class="col-md-3">
+    <div class="card d-flex mb-2">
+      <div class="card-body">
+        <h4 class="card-title d-flex justify-content-between align-items-center">
+          Nombre del cliente: {{nombre}}{{#unless (eq status 'PAGADO')}}
+          <a href="/notes/edit/{{_id}}">
+            <button type="button" class="btn btn-success w-100 mt-1">
+              <i class="fas fa-edit"></i> <!-- Icono de editar -->
+            </button>
+          </a>
+          {{/unless}}
+        </h4>
+        <input class="form-control text-center" type="text" placeholder='{{status}}' readonly>
+        <form action="/notes/delete/{{_id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          {{#unless (eq status 'PAGADO')}}
+          <button type="submit" class="btn btn-danger btn-block btn-lg mt-2 w-100">Eliminar</button>
+          {{/unless}}
+        </form>
+        {{#if (eq status 'Finalizado')}}
+        <button class="btn btn-warning w-100 mt-1 generate-pdf-btn" data-id="{{_id}}">
+          <i><img src="/img/icon-pdf.png" style="width: 35px;"></i>
+        </button>
+        {{else if (eq status 'PAGADO')}}
+        <button class="btn btn-warning w-100 mt-1 generate-pdf-btn" data-id="{{_id}}">
+          <i><img src="/img/icon-pdf.png" style="width: 35px;"></i>
+        </button>
+        <!-- Agregar enlace para detalles del pago solo para el rol de administrador -->
+        <a href="/detalles/{{_id}}" class="btn btn-info w-100 mt-1">Detalles del pago</a>
+        {{else}}
+        <button class="btn btn-warning w-100 mt-1" disabled>
+          <i><img src="/img/icon-pdf.png" style="width: 35px;"></i>
+        </button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  {{/each}}
+  {{else}}
+  <div class="card mx-auto">
+    <div class="card-body">
+      <h1>Hola {{nombre}}</h1>
+      <p class="lead">Aún no hay ordenes</p>
+      <a href="/notes/add" class="btn btn-warning btn-block">Crear nueva orden</a>
+    </div>
+  </div>
+  {{/if}}
+  {{else}}
+  {{#if notes.length}}
+  {{#each notes}}
+  <div class="col-md-3 mb-2">
+    <div class="card d-flex">
+      <div class="card-body text-center">
+        <h5>Nombre del cliente: {{nombre}}</h5>
+        <h6>Numero de servicio: {{nServicio}}</h6>
+        <input class="form-control text-center" type="text" placeholder='{{status}}' readonly>
+        {{#if (eq status "Finalizado")}}
+        <!-- Combo para seleccionar método de pago con redirección automática -->
+        <form action="/pagar/{{_id}}" method="GET" target="_blank">
+          <input type="hidden" name="id" value="{{_id}}">
+          <button class="btn btn-success btn-block mt-2 w-100" type="submit">Pagar</button>
+        </form>
+        {{/if}}
+        {{#if (eq status "PAGADO")}}
+        <a href="/detalles/{{_id}}" class="btn btn-info btn-block mt-2 w-100">Detalles del pago</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  {{/each}}
+  {{else}}
+  <div class="card mx-auto">
+    <div class="card-body">
+      <h1>Hola {{nombre}}</h1>
+      <p class="lead">Aún no hay ordenes</p>
+      <a href="/notes/add" class="btn btn-warning btn-block">Crear nueva orden</a>
+    </div>
+  </div>
+  {{/if}}
+  {{/if}}
+</div>
+
+
+
+
+<!--Script modal-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--Script fin modal-->
+
+
+<script>
+  document.querySelectorAll('.generate-pdf-btn').forEach(button => {
+    button.addEventListener('click', async (event) => {
+      const id = event.currentTarget.getAttribute("data-id");
+      let ruta = '';
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success ms-5',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Deseas que este pdf se envie al correo?',
+        text: "En caso que quieras enviar tu factura por correo selecciona la opcion Si enviar, en caso contrario eligue la opcion No enviar",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si enviar',
+        cancelButtonText: 'No enviar',
+        reverseButtons: true
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Generando PDF...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          ruta = `/generate-pdf-correo/${id}`;
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire({
+            title: 'Generando PDF...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          ruta = `/generate-pdf/${id}`;
+        }
+
+        if (ruta != '') {
+          const response = await fetch(ruta);
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'OrdenTrabajo.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          Swal.close(); // Cerrar el SweetAlert de "Generando PDF" al iniciar la descarga
+        }
+      })
+    });
+  });
+
+</script>
+
+
+
+<script>
+  function redirectToPayment() {
+    var selectedOption = document.getElementById("paymentMethod").value;
+    var id = document.getElementById("orderId").value; // Obtener el ID de la nota desde un campo oculto
+
+    if (selectedOption === "paypal") {
+      window.location.href = "/pagar/" + id; // Redirigir al usuario a la ruta de PayPal con el ID incluido
+    } else if (selectedOption === "creditcard") {
+      window.location.href = "/pagar-con-tarjeta?id=" + id; // Redirigir al usuario a la ruta de tarjeta de crédito con el ID incluido
+    }
+  }
+</script>
+
+<script>
+  /*document.getElementById('generate-pdf').addEventListener('click', async (event) => {
+    const id = event.currentTarget.getAttribute("data-id");
+    let ruta = '';
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success ms-5',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: 'Deseas que este pdf se envie a tu correo?',
+      text: "En caso que quieras enviar tu factura por correo selecciona la opcion Si enviar, en caso contrario eligue la opcion No enviar",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si enviar',
+      cancelButtonText: 'No enviar',
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Generando PDF...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        ruta = `/generate-pdf-correo/${id}`;
+      } else if (
+        /* Read more about handling dismissals below */
+  result.dismiss === Swal.DismissReason.cancel
+      ) {
+    Swal.fire({
+      title: 'Generando PDF...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+    ruta = `/generate-pdf/${id}`;
+  }
+
+  if (ruta != '') {
+    const response = await fetch(ruta);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'OrdenTrabajo.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    Swal.close(); // Cerrar el SweetAlert de "Generando PDF" al iniciar la descarga
+  }
+    })
+  });* /
+</script>

@@ -1,0 +1,26 @@
+<div class="background"></div>
+<div class="row">
+  <div class="col-md-4 mx-auto">
+    <div class="card text-white">
+      <div class="card-header text-center pt-4">
+        <h1 class="h4 text-center text-white">INICIAR SESIÓN</h1>
+      </div>
+      <img class="rounded-circle mx-auto d-block logo m-4" src="/img/logo.jpg" alt="Logo" />
+      <div class="card-body">
+        <p class="text-center">Hemos enviado un codigo de verificación al correo: {{user.email}}.
+          Por favor, verifica tu correo electrónico e ingresa el codigo para iniciar sesión.</p>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <form action="/auth/signin" method="POST">
+              <div class="form-group">
+                <label for="verificationCode">Código de verificación:</label>
+                <input type="text" class="form-control" id="verificationCode" name="verificationCode" required>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block w-100 mt-2">Verificar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

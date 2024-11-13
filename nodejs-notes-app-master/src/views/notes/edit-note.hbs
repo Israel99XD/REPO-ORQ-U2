@@ -1,0 +1,271 @@
+<div class="background"></div>
+{{#each errors}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{text}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{{/each}}
+<div class="col-md-5 mx-auto">
+  <div class="card">
+    <div class="card-header  text-center">
+      <h3>EDITAR ORDEN <a href="/notes"><button class="btn btn-primary btn-sm float-end">Cancelar</button></a></h3>
+    </div>
+    <div class="card-body">
+      <form action="/notes/edit-note/{{note._id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT" />
+        <div class="container text-center form-group mb-1">STATUS
+          <div class="form-group">
+            <div class="form-check form-check-inline">
+              <input {{#if (eq note.status 'No iniciado' )}}checked{{else}}{{/if}} class="form-check-input" type="radio"
+                name="status" id="status" value="No iniciado">
+              <label class="form-check-label" for="inlineRadio1">No iniciado</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input {{#if (eq note.status 'En proceso' )}}checked{{else}}{{/if}} class="form-check-input" type="radio"
+                name="status" id="status" value="En proceso">
+              <label class="form-check-label" for="inlineRadio2">En proceso</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input {{#if (eq note.status 'Finalizado' )}}checked{{else}}{{/if}} class="form-check-input" type="radio"
+                name="status" id="status" value="Finalizado">
+              <label class="form-check-label" for="inlineRadio2">Finalizado</label>
+            </div>
+          </div>
+
+          <div class="descripcion">
+            <h4>Tareas a realizar</h4>
+            <ul>
+              {{#each note.descripcion}}
+              <p>
+                <label>
+                  <input class="form-check-input" type="checkbox" name="tarea" value="{{this}}">
+                  Trabajo a realizar: {{this}}
+                </label>
+              </p>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="form-group">
+            NECESITA PIEZAS
+            <div>
+              <div class="form-check form-check-inline mb-1">
+                <input class="form-check-input" type="radio" name="necesitaPiezas" id="radioSi" value="si" {{#if (eq
+                  note.necesitaPiezas 'si' )}}checked{{/if}}>
+                <label class="form-check-label" for="radioSi">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="necesitaPiezas" id="radioNo" value="no" {{#if (eq
+                  note.necesitaPiezas 'no' )}}checked{{/if}}>
+                <label class="form-check-label" for="radioNo">No</label>
+              </div>
+            </div>
+            <select class="form-select" id="pieza" name="piezas">
+              <option disabled selected>Seleccione una pieza</option>
+              {{#each piezas}}
+              <option value="{{_id}}" {{#if (eq _id note.pieza)}}selected{{/if}}>{{nombre}} ${{precio}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="input-group input-group-sm mb-3 mt-1">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Costo mano de obra $</span>
+            <input type="number" class="form-control" name="presupuesto" aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <button class="btn btn-success w-100 mt-2" type="submit">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Agrega el botón modal con una condición -->
+  {{#if (eq note.malEquipo 'Si')}}
+  <button type="button" class="btn btn-warning w-100 mt-2" id="mostrarArchivosBtn" data-bs-toggle="modal"
+    data-bs-target="#archivosModal">Mostrar imágenes del daño</button>
+  {{/if}}
+
+  <!-- Modal -->
+  <div class="modal fade" id="archivosModal" tabindex="-1" aria-labelledby="archivosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="archivosModalLabel">IMAGENES DEL DAÑO</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="listaArchivos">
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const editarBoton = document.querySelector('.fa-edit');
+
+      editarBoton.addEventListener('click', function () {
+        const piezaSelect = document.getElementById('pieza');
+        piezaSelect.value = 'Selecione'; // Establece el valor del select a vacío
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const radioSi = document.getElementById('radioSi');
+      const radioNo = document.getElementById('radioNo');
+      const selectPieza = document.getElementById('pieza');
+
+      radioSi.addEventListener('change', function () {
+        if (this.checked) {
+          selectPieza.style.display = 'block';
+          localStorage.setItem('necesitaPiezas', 'si'); // Almacena en Local Storage
+        }
+      });
+
+      radioNo.addEventListener('change', function () {
+        if (this.checked) {
+          selectPieza.style.display = 'none';
+          localStorage.setItem('necesitaPiezas', 'no'); // Almacena en Local Storage
+        }
+      });
+
+      // Verifica si se debe mostrar el select al cargar la página
+      const storedValue = localStorage.getItem('necesitaPiezas');
+      if (storedValue === 'si') {
+        radioSi.checked = true;
+        selectPieza.style.display = 'block';
+      } else if (storedValue === 'no') {
+        radioNo.checked = true;
+        selectPieza.style.display = 'none';
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      var radios = document.querySelectorAll('input[name="status"]');
+
+      function actualizarStatus() {
+        var todosSeleccionados = true;
+        var algunSeleccionado = false;
+
+        checkboxes.forEach(function (checkbox) {
+          if (!checkbox.checked) {
+            todosSeleccionados = false;
+          } else {
+            algunSeleccionado = true;
+          }
+        });
+
+        if (todosSeleccionados) {
+          radios.forEach(function (radio) {
+            if (radio.value === "Finalizado") {
+              radio.checked = true;
+            }
+          });
+        } else if (algunSeleccionado) {
+          radios.forEach(function (radio) {
+            if (radio.value === "En proceso") {
+              radio.checked = true;
+            }
+          });
+        } else {
+          radios.forEach(function (radio) {
+            if (radio.value === "No iniciado") {
+              radio.checked = true;
+            }
+          });
+        }
+      }
+
+      checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', actualizarStatus);
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      // Restaura los estados de los checkboxes desde el Local Storage
+      checkboxes.forEach(function (checkbox) {
+        var storedValue = localStorage.getItem('checkbox_' + checkbox.value);
+        if (storedValue === 'true') {
+          checkbox.checked = true;
+        }
+      });
+
+      function actualizarStatus() {
+        var todosSeleccionados = true;
+        var algunSeleccionado = false;
+
+        checkboxes.forEach(function (checkbox) {
+          if (!checkbox.checked) {
+            todosSeleccionados = false;
+          } else {
+            algunSeleccionado = true;
+          }
+
+          // Almacena el estado actual del checkbox en el Local Storage
+          localStorage.setItem('checkbox_' + checkbox.value, checkbox.checked);
+        });
+
+        // Resto del código para actualizar el estado aquí...
+      }
+
+      checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', actualizarStatus);
+      });
+    });
+
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.querySelector('form');
+
+      form.addEventListener('submit', function (event) {
+        const checkboxes = document.querySelectorAll('[name="tarea"]');
+
+        checkboxes.forEach(function (checkbox) {
+          checkbox.checked = false; // Desmarca el checkbox
+        });
+      });
+    });
+  </script>
+
+  <script>
+  // Espera a que el documento esté completamente cargado
+document.addEventListener('DOMContentLoaded', function () {
+  // Manejador de clic para el botón
+  $("#mostrarArchivosBtn").click(function() {
+    // Limpiar la lista de archivos
+    $("#listaArchivos").empty();
+
+    // Agregar cada archivo a la lista
+    {{#each note.archivos}}
+    $("#listaArchivos").append(`<img src="/downloads/{{this}}" class="img-fluid mt-3" alt="{{this}}">`);
+    {{/each}}
+
+    // Mostrar el modal
+    $("#archivosModal").modal("show");
+  });
+});
+
+</script>

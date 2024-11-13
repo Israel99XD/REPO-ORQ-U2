@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota de Remisión</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .nota-remision {
+            background-color: #ffffff;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        .titulo {
+            text-align: center;
+            color: #3498db;
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .cliente-info {
+            text-align: right;
+        }
+        .cliente-info p {
+            margin: 5px 0;
+        }
+        .tabla-productos {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .tabla-productos th, .tabla-productos td {
+            border: 1px solid #3498db;
+            padding: 10px;
+            text-align: center;
+        }
+        .tabla-productos th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nota-remision">
+            <h2 class="titulo">Nota de Remisión</h2>
+            <div class="cliente-info">
+                <p><strong>Numero de servicio:</strong> {{nServicio}} </p>
+                <p><strong>Nombre del Cliente:</strong> {{nombre}} </p>
+                <p><strong>Numero de Teléfono:</strong> {{nTelefono}} </p>
+                <p><strong>Fecha:</strong> {{date}} </p>
+                <p><strong>Quien recibio el equipo:</strong> {{receptor}} </p>
+                <p> <strong>Trabajo Realiazdo: </strong> {{descripcion}} </p>
+                <p><strong>Costo de mano de obra $: </strong> {{presupuesto}} </p>
+            </div>
+            <table id="tabla-productos" class="tabla-productos">
+                <thead>
+                    <tr>
+                        <th>Pieza</th>
+                        <th></th>
+                        <th>Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each piezas}}
+                    <tr>
+                        <td>{{this.nombre}}</td>
+                        <td> {{this.cantidad}}</td>
+                        <td> ${{this.precio}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <div class="total">
+                <p id="total-presupuesto"><strong>Total: $ </strong></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+ <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var tablaProductos = document.getElementById("tabla-productos");
+        var totalPresupuesto = document.getElementById("total-presupuesto");
+
+        var total = 0;
+
+        for (var i = 1, row; row = tablaProductos.rows[i]; i++) {
+            var precioUnitario = parseFloat(row.cells[2].textContent.replace("$", ""));
+            total += precioUnitario;
+        }
+
+        total += parseFloat("{{presupuesto}}");
+
+        totalPresupuesto.innerHTML = "<strong>Total: $ " + total.toFixed(2) + "</strong>";
+    });
+</script>
+
+
+</body>
+</html>

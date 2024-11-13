@@ -1,0 +1,42 @@
+{
+  "name": "nodejs-notes-app",
+  "version": "2.0.1",
+  "description": "Notes App",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^4.6.0",
+    "express": "^4.21.1",
+    "express-handlebars": "^6.0.6",
+    "express-session": "^1.17.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^6.13.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "nodejs-notes-app": "file:",
+    "nodemailer": "^6.9.13",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "paypal-rest-sdk": "^1.8.1",
+    "pdfkit": "^0.15.0",
+    "puppeteer": "^22.6.5"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "handlebars": "^4.7.7",
+    "nodemon": "^3.1.7"
+  }
+}

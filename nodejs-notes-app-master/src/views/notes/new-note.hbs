@@ -1,0 +1,146 @@
+<div class="background"></div>
+<div class="col-md-4 mx-auto">
+  <div class="card mb-5">
+    <div class="card-header bg-dark text-center">
+      <h3 class="text-white">Nueva orden <a href="/notes"><button
+            class="btn btn-primary btn-sm float-end">Cancelar</button></a></h3>
+    </div>
+    <div class="card-body text-right">
+      <form action="/notes/new-note" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <div class="form-group mb-1 text-center input-group-sm">Folio:
+            <input type="number" name="nServicio" value="{{folio}}" class="form-control text-center" autofocus readonly>
+          </div>
+          <div class="form-group mb-1 input-group-sm">
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre del cliente" autofocus required
+              title="Por favor ingrese el nombre del cliente">
+          </div>
+          <div class="form-group mb-1 input-group-sm">
+            <input type="tel" name="nTelefono" class="form-control" placeholder="Numero de telefono" autofocus required
+              title="Por favor ingrese el número de teléfono" pattern="[0-9]{10}">
+          </div>
+
+          <div class="form-group mb-1 input-group-sm">
+            <input type="email" name="email" class="form-control" placeholder="Correo electronico" autofocus required
+              title="Por favor ingrese el correo electrónico">
+          </div>
+          <div class="form-group mb-1 input-group-sm">
+            <input type="text" name="descripcion" class="form-control" placeholder="Descripcion del trabajo" autofocus
+              required title="Por favor ingrese la descripción del trabajo">
+          </div>
+
+          <!--select-->
+          <div class="container text-center form-group mb-1">
+            El equipo tiene contraseña
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="contrasenaEquipo" id="inlineRadio1" value="Si">
+                <label class="form-check-label" for="inlineRadio1">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="contrasenaEquipo" id="inlineRadio2" value="No">
+                <label class="form-check-label" for="inlineRadio2">No</label>
+              </div>
+            </div>
+            <!-- Fin select -->
+          </div>
+
+          <div class="form-group input-group-sm">
+            <input type="text" name="passEquipo" class="form-control" placeholder="Contraseña del equipo" autofocus
+              style="display: none;">
+          </div>
+          <div class="container text-center form-group mb-1">Quiere respaldo del equípo
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="respaldo" id="inlineRadio1" value="Si">
+                <label class="form-check-label" for="inlineRadio1">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="respaldo" id="inlineRadio2" value="No">
+                <label class="form-check-label" for="inlineRadio2">No</label>
+              </div>
+            </div>
+            <!--fin select-->
+          </div>
+          <div class="container text-center form-group mb-1">El equipo tiene daños físicos
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="malEquipo" id="inlineRadio3" value="Si">
+                <label class="form-check-label" for="inlineRadio1">Si</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="malEquipo" id="inlineRadio4" value="No">
+                <label class="form-check-label" for="inlineRadio2">No</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-1 input-group-sm" id="descripcionDanioInput" style="display: none;">
+            <textarea name="descripcionDanio" class="form-control" placeholder="Descripción del daño"
+              style="display:none;"></textarea>
+            <label for="archivos">Cargar foto del daño</label>
+            <input type="file" name="archivos" class="form-control" placeholder="sube archivos" autofocus multiple />
+          </div>
+          <div class="form-group input-group-sm">
+            {{#if (eq user.rol "admin")}}
+            <input type="text" name="receptor" class="form-control" placeholder="Nombre de quien recibe" autofocus>
+          </div>
+          {{/if}}
+          <div class="container text-center form-group mb-1 input-group-sm" hidden>Status
+            <select class="form-select" id="status" name="status">
+              <option selected value="No iniciado">No iniciado</option>
+            </select>
+            <!--fin select-->
+          </div>
+          <button class="btn btn-outline-success w-100 mt-2" type="submit">
+            GUARDAR
+          </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const radioSi = document.getElementById('inlineRadio1');
+    const radioNo = document.getElementById('inlineRadio2');
+    const passEquipoInput = document.querySelector('[name="passEquipo"]');
+
+    radioSi.addEventListener('change', function () {
+      if (this.checked) {
+        passEquipoInput.style.display = 'block';
+      }
+    });
+
+    radioNo.addEventListener('change', function () {
+      if (this.checked) {
+        passEquipoInput.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+
+<script>
+  const radioSi = document.getElementById('inlineRadio3');
+  const radioNo = document.getElementById('inlineRadio4');
+  const descripcionDanio = document.querySelector('[name="descripcionDanio"]');
+  const descripcionDanioInput = document.getElementById('descripcionDanioInput');
+
+
+  // Agrega un evento para escuchar cambios en los radio buttons
+  radioSi.addEventListener('change', function () {
+    if (this.checked) {
+      descripcionDanio.style.display = 'block';
+      descripcionDanioInput.style.display = 'block';
+
+    }
+  });
+
+  radioNo.addEventListener('change', function () {
+    if (this.checked) {
+      descripcionDanio.style.display = 'none';
+      descripcionDanioInput.style.display = 'none';
+
+    }
+  });
+</script>

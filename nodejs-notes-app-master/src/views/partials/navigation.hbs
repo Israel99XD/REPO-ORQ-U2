@@ -1,0 +1,189 @@
+<nav class="navbar navbar-expand-lg bg-dark fixed-top" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" href="/"> <img src="/img/logo.jpg" alt="Logo SERIS APP" class="logonav"> ISER APP
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/about">Sobre Nosotros</a>
+        </li>
+        {{#if user}}
+        {{#if (eq user.rol 'almacen')}}
+        <li class="nav-item">
+          <a class="nav-link" href="/piezas">Piezas</a>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a class="nav-link" href="/notes">
+            {{#if (eq user.rol 'user')}} Mis Ordenes {{else}} Todas las Ordenes {{/if}}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/notes/add">Nueva Orden</a>
+        </li>
+        {{/if}}
+        {{/if}}
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        {{#if user}}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Cuenta
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <!--<div class="dropdown-divider"></div>-->
+            <a class="dropdown-item" href="/auth/logout" id="cerrar">Cerrar sesión</a>
+            {{#if (eq user.rol 'admin')}}
+            <a class="dropdown-item" href="/notes/users">Administración</a>
+            {{/if}}
+          </ul>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/signin">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/signup">Registrarse</a>
+        </li>
+        {{/if}}
+        <li class="nav-item">
+          <a onclick="window.location.href='/Mapa'" class="nav-link" href="/Mapa">Mapa del sitio</a>
+        </li>
+        <li class="nav-item">
+          <form class="d-flex mx-auto" action="/search" method="GET">
+            <input class="form-control me-2" type="search" id="searchInput" placeholder="Buscar..." aria-label="Buscar"
+              name="q">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(document).ready(function () {
+    // Obtener la URL actual mediante AJAX
+    var url = window.location.pathname;
+
+    // Iterar sobre todos los elementos de la lista
+    $('.navbar-nav li').each(function () {
+      // Comparar la URL actual con el enlace del elemento de la lista
+      if ($(this).find('a').attr('href') === url) {
+        // Si la URL coincide, agregar la clase 'active' al elemento de la lista
+        $(this).addClass('active');
+      }
+    });
+  });
+</script>
+
+<script>
+  $(function () {
+    // Configurar el autocompletado
+    $("input#searchInput").autocomplete({
+      source: function (request, response) {
+        // Enviar una solicitud AJAX para obtener sugerencias de búsqueda
+        $.ajax({
+          url: "/autocomplete",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function (data) {
+            // Pasar los datos de respuesta al autocompletado
+            response(data);
+          }
+        });
+      },
+      minLength: 2 // Número mínimo de caracteres antes de mostrar sugerencias
+    });
+  });
+
+</script>
+
+
+
+<!--{{#if user}}
+<script>
+  // Configuración de tiempo de inactividad en segundos
+  var tiempoInactividad = 5;
+
+  // Variable para almacenar la marca de tiempo de la última actividad
+  var ultimaActividad = new Date().getTime();
+
+  var cerrarId = null;
+
+  // Función para mostrar la alerta y cerrar la sesión
+  function cerrarSesion() {
+    const formularioLogout = document.getElementById("cerrar");
+    // Obtener el elemento del enlace por su ID
+    var enlaceCerrar = document.getElementById("cerrar");
+
+    // Obtener la URL del enlace
+    var url = enlaceCerrar.getAttribute("href");
+
+    var acepto = false;
+    // Mostrar la alerta después de 10 segundos
+    var alertaId = setTimeout(function () {
+      Swal.fire({
+        title: "¡Atención!",
+        text: "Se cerrará su sesión en 10 segundos debido a inactividad. ¿Desea continuar con su sesión?",
+        icon: "warning",
+        buttons: ["Cancelar", "Continuar"],
+        dangerMode: true,
+        timer: 10000,
+      }).then((value) => {
+        if (value) {
+          // Si el usuario hace clic en "Continuar", actualizar la marca de tiempo de la última actividad del usuario
+          ultimaActividad = new Date().getTime();
+          acepto = true;
+          cerrarId = null;
+        } else {
+         window.location.href = "/auth/logout";
+        }
+      });
+
+    }, 10000);
+
+    if (alertaId) {
+      cerrarId = alertaId;
+    } else {
+      if (acepto) {
+        clearTimeout(alertaId);
+      } else {
+        window.location.href = "/auth/logout";
+      }
+    }
+
+  }
+
+  // Detecta la inactividad del usuario
+  document.addEventListener('mousemove', function () {
+    ultimaActividad = new Date().getTime();
+  });
+
+  // Verifica la inactividad cada segundo
+  setInterval(function () {
+    var tiempoInactivo = (new Date().getTime() - ultimaActividad) / 1000;
+    if (tiempoInactivo > tiempoInactividad) {
+      // Muestra la alerta y cierra la sesión
+      if (cerrarId == null) {
+        cerrarSesion();
+      }
+    }
+  }, 1000);
+</script>
+{{/if}}-->

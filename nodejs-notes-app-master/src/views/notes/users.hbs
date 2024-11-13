@@ -1,0 +1,125 @@
+<!-- views/notes/users.hbs -->
+<div class="background"></div>
+<h1>Lista de Usuarios</h1>
+
+<table class="table table-dark table-striped" id="tablaUsuarios">
+  <thead class="bg-light">
+    <tr>
+      <th>Nombre</th>
+      <th>Rol</th>
+      <th>Correo Electrónico</th>
+      <th>Editar</th>
+      <th>Eliminar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+    <tr>
+      <td>{{this.name}}</td>
+      <td>{{this.rol}}</td>
+      <td>{{this.email}}</td>
+      <td>
+        <button type="button" class="btn btn-warning btn-sm mb-1 float-end" data-bs-toggle="modal"
+          data-bs-target="#editRoleModal{{this._id}}">
+          Editar Rol
+        </button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger btn-sm mb-1 float-end" data-bs-toggle="modal"
+          data-bs-target="#confirmDeleteModal{{this._id}}">
+          Eliminar
+        </button>
+      </td>
+    </tr>
+
+    <!-- Modal de edición de rol -->
+    <div class="modal fade" id="editRoleModal{{this._id}}" data-bs-backdrop="static" data-bs-keyboard="false"
+      tabindex="-1" aria-labelledby="editRoleModalLabel{{this._id}}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="editRoleModalLabel{{this._id}}">Editar el Rol de {{this.name}}</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Rol Actual: {{this.rol}}</p>
+            <p>Correo Electónico: {{this.email}}</p>
+            <form action="/notes/users/edit-role/{{this._id}}?_method=PUT" method="POST" class="mb-2">
+              <input type="hidden" name="_method" value="put"> <!-- Método PUT para la actualización -->
+              <div class="mb-3">
+                <label for="newRole" class="form-label">Nuevo Rol</label>
+                <select class="form-select" id="newRole" name="newRole" required>
+                  <option value="admin" {{#if (eq this.rol "admin" )}}selected{{/if}}>Admin</option>
+                  <option value="almacen" {{#if (eq this.rol "almacen" )}}selected{{/if}}>Almacén</option>
+                  <option value="user" {{#if (eq this.rol "user" )}}selected{{/if}}>User</option>
+                </select>
+              </div>
+              <div class="mt-2 mb-2">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-success float-end">Actualizar Rol</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="confirmDeleteModal{{this._id}}" data-bs-backdrop="static" data-bs-keyboard="false"
+      tabindex="-1" aria-labelledby="confirmDeleteModalLabel{{this._id}}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="confirmDeleteModalLabel{{this._id}}">¿Estás seguro de eliminar a
+              {{this.name}}?</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Esta acción no se puede deshacer.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <form action="/notes/users/delete/{{this._id}}?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('#tablaUsuarios').DataTable({
+      searching: true,
+      language: {
+        "decimal": "",
+        "emptyTable": "No hay datos disponibles en la tabla",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+        "infoEmpty": "Mostrando 0 a 0 de 0 entradas",
+        "infoFiltered": "(filtrado de _MAX_ entradas totales)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron registros coincidentes",
+        "paginate": {
+          "first": "Primero",
+          "last": "Último",
+          "next": "Siguiente",
+          "previous": "Anterior"
+        },
+        "aria": {
+          "sortAscending": ": Activar para ordenar la columna en orden ascendente",
+          "sortDescending": ": Activar para ordenar la columna en orden descendente"
+        }
+      }
+    });
+  });
+</script>
